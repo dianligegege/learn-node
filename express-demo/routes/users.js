@@ -56,7 +56,7 @@ router.get('/getVideoList', (req, res) => {
 });
 
 router.get('/video', (req, res) => {
-    let path = '../assets/sample.mp4';
+    let path = 'assets/sample.mp4';
     let stat = fs.statSync(path);
     let fileSize = stat.size;
     let range = req.headers.range;
@@ -68,13 +68,22 @@ router.get('/video', (req, res) => {
 
         end = end > fileSize - 1 ? fileSize - 1 : end;
 
-        // let chunkSize = (end - start) + 1;
-        // let file = fs.createReadStream(path, {})
+        let chunkSize = (end - start) + 1;
+        let file = fs.createReadStream(path, { start, end });
+        let head = {
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunkSize,
+            'Content-Type': 'video/mp4',
+        };
+        res.writeHead(206, head);
+        file.pipe(res);
+    } else {
+        const head = { 'Content-Type': 'video/mp4' };
+        res.writeHead(200, head);
+        fs.createReadStream('assets/sample.mp4').pipe(res);
     }
 
-    const head = { 'Content-Type': 'video/mp4' };
-    res.writeHead(200, head);
-    fs.createReadStream('assets/sample.mp4').pipe(res);
 });
 
 module.exports = router;
