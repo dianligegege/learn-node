@@ -51,6 +51,7 @@ router.get('/getVideoList', (req, res) => {
             console.log(chalk.red('err', err));
             return;
         }
+        console.log(rows);
         res.send(handler(rows));
     });
 });
