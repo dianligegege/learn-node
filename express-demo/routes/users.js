@@ -84,7 +84,6 @@ router.get('/video', (req, res) => {
         res.writeHead(200, head);
         fs.createReadStream('assets/sample.mp4').pipe(res);
     }
-
 });
 
 module.exports = router;
