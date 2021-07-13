@@ -55,6 +55,7 @@ router.get('/getVideoList', (req, res) => {
         res.send(handler(rows));
     });
 });
+console.log('12');
 
 router.get('/video', (req, res) => {
     let path = 'assets/sample.mp4';
